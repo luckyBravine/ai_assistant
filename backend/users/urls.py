@@ -2,7 +2,7 @@ from django.urls import path, include
 from .api import RegisterAPI, LoginAPI, UserAPI
 from knox import views as knox_views
 
-#create our endpoints
+#Register, Login, User, Logout endpoints
 urlpatterns = [
     path('api/auth', include('knox.urls')),
     path('api/auth/register', RegisterAPI.as_view()),
