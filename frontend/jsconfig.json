@@ -1,0 +1,7 @@
+//this file sets options for pathing much easier
+{
+    "compilerOptions": {
+        "baseUrl": "src"
+    },
+    "include": ["src"]
+}
