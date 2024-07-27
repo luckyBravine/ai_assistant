@@ -28,7 +28,7 @@ const Navbar = () => {
   );
   return (
     <nav className="navbar navbar-expand-sm bg-body-tertiary fixed-top text-center">
-      <div className="container-fluid">
+      <div className="container">
         <button
           className="navbar-toggler"
           type="button"
@@ -44,7 +44,7 @@ const Navbar = () => {
           AI Assistant
         </Link>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <NavLink className="nav-link" to="/">
                 Home

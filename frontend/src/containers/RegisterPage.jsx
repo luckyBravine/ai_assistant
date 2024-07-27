@@ -1,13 +1,14 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {Navigate} from 'react-router-dom'
-import {useSelector, useDispatch} from 'react-redux'
-import {register} from '../features/user'
+import { Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { register } from "../features/user";
+import { toast } from "sonner";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const {registered, loading} = useSelector(state => state.user)
+  const { registered, loading, message } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -16,21 +17,30 @@ const RegisterPage = () => {
   });
 
   const { username, email, password, password2 } = formData;
+
+  useEffect(() => {
+    if (message) {
+      if (registered) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    }
+  }, [registered, message]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (password !== password2) {
-      // dispatch(createMessage({ passwordNotMatch: 'Passwords do not match' }));
-      console.log("Password did not match")
-      dispatch(register)
+      toast.error('Passwords do not match');
     } else {
-      dispatch(register({username, email, password}))
+      dispatch(register({ username, email, password }));
     }
   };
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  if(registered) return <Navigate to='/LoginPage' />
+  if (registered) return <Navigate to="/LoginPage" />;
 
   return (
     <Layout title="AI Assistant | Dashboard" content="Dashboard">
@@ -81,14 +91,13 @@ const RegisterPage = () => {
             <div className="form-group">
               {loading ? (
                 <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+                  <span className="visually-hidden">Loading...</span>
+                </div>
               ) : (
                 <button type="submit" className="btn btn-primary">
-                Register
-              </button>
+                  Register
+                </button>
               )}
-             
             </div>
             <p>
               Already have an account? <Link to="/login">Login</Link>
