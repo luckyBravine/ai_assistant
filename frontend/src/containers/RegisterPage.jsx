@@ -8,7 +8,9 @@ import { toast } from "sonner";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const { registered, loading, message } = useSelector((state) => state.user);
+  const { registered, loading, sucessMessage, errorMessage } = useSelector(
+    (state) => state.user
+  );
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,19 +21,25 @@ const RegisterPage = () => {
   const { username, email, password, password2 } = formData;
 
   useEffect(() => {
-    if (message) {
-      if (registered) {
-        toast.success(message);
-      } else {
-        toast.error(message);
-      }
+    if (sucessMessage) {
+      toast.success(sucessMessage);
     }
-  }, [registered, message]);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [sucessMessage, errorMessage]);
+
+  // useEffect(() => {
+  //   // Reset the registered state when the component unmounts
+  //   return () => {
+  //     dispatch(resetRegistered());
+  //   };
+  // }, [dispatch]);
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (password !== password2) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
     } else {
       dispatch(register({ username, email, password }));
     }
@@ -40,10 +48,12 @@ const RegisterPage = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // if (registered) return <Navigate to="/LoginPage" />;
   if (registered) return <Navigate to="/LoginPage" />;
+  
 
   return (
-    <Layout title="AI Assistant | Dashboard" content="Dashboard">
+    <Layout title="AI Assistant | Register" content="Register">
       <div className=" m-auto">
         <div className="card card-body mt-5">
           <h2 className="text-center">Register</h2>
