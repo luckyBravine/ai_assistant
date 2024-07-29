@@ -1,19 +1,42 @@
 import { Link, NavLink } from "react-router-dom";
-import {useSelector} from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/user";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
 
-  const {isAuthenticated} = useSelector(state => state.user)
+  const { isAuthenticated, loading } = useSelector((state) => state.user);
 
   const authLinks = (
-    <li className="nav-item">
-      <NavLink className="nav-link" to="/DashboardPage">
-        Dashboard
-      </NavLink>
-    </li>
+    <>
+      <li className="nav-item">
+        <NavLink className="nav-link" to="/DashboardPage">
+          Dashboard
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        {loading ? (
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          <button
+            className=" btn-warning btn text-light"
+            onClick={() => dispatch(logout())}
+          >
+            Logout
+          </button>
+        )}
+      </li>
+    </>
   );
   const guestLinks = (
     <>
+      <li className="nav-item">
+        <NavLink className="nav-link" to="/">
+          Home
+        </NavLink>
+      </li>
       <li className="nav-item">
         <NavLink className="nav-link" to="/LoginPage">
           Login
@@ -40,16 +63,11 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="#">
           AI Assistant
         </Link>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Home
-              </NavLink>
-            </li>
             {isAuthenticated ? authLinks : guestLinks}
           </ul>
         </div>
