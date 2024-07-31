@@ -1,16 +1,20 @@
 import Layout from "../components/Layout";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { register } from "../features/user";
+import { useRegisterMutation } from "../features/userAPI";
 import { toast } from "sonner";
+import { registerUser, setError } from "../features/user";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const { registered, loading, sucessMessage, errorMessage } = useSelector(
-    (state) => state.user
-  );
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const { registered } = useSelector((state) => state.user);
+
+  //get the userAPI content so as to get the details within
+  const apiState = useSelector((state) => state.userApi);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -21,44 +25,63 @@ const RegisterPage = () => {
   const { username, email, password, password2 } = formData;
 
   useEffect(() => {
-    if (sucessMessage) {
-      toast.success(sucessMessage);
-    }
-    if (errorMessage) {
-      toast.error(errorMessage);
-    }
-  }, [sucessMessage, errorMessage]);
+    const mutationKeys = Object.keys(apiState.mutations);
+    mutationKeys.forEach((key) => {
+      const mutation = apiState.mutations[key];
+      if (mutation.status === "rejected" && mutation.error) {
+        const errorMessages = mutation.error.data.non_field_errors || [
+          "An error occurred",
+        ];
+        errorMessages.forEach((msg) => toast.error(msg));
+      } else if (mutation.status === "fulfilled" && mutation.data) {
+        toast.success("User registered successful!");
+      }
+    });
 
-  // useEffect(() => {
-  //   // Reset the registered state when the component unmounts
-  //   return () => {
-  //     dispatch(resetRegistered());
-  //   };
-  // }, [dispatch]);
+    const queryKeys = Object.keys(apiState.queries);
+    queryKeys.forEach((key) => {
+      const query = apiState.queries[key];
+      if (query.status === "rejected" && query.error) {
+        const errorMessages = query.error.data.non_field_errors || [
+          "An error occurred",
+        ];
+        errorMessages.forEach((msg) => toast.error(msg));
+      } else if (query.status === "fulfilled" && query.data) {
+        toast.success("Request successful!");
+      }
+    });
+  }, [apiState.mutations, apiState.queries]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       toast.error("Passwords do not match");
     } else {
-      dispatch(register({ username, email, password }));
+      try {
+        const user = await register({ username, email, password }).unwrap();
+        dispatch(registerUser(user));
+      } catch (error) {
+        dispatch(setError(error.data.errorMessage));
+      }
     }
   };
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // if (registered) return <Navigate to="/LoginPage" />;
   if (registered) return <Navigate to="/LoginPage" />;
-  
 
   return (
     <Layout title="AI Assistant | Register" content="Register">
-      <div className=" m-auto">
-        <div className="card card-body mt-5">
+      <div className="d-flex justify-content-center align-items-center vh-100 w-100 container">
+        
+        <div
+          className="card card-body mt-5"
+          style={{ maxWidth: "500px", width: "100%" }}
+        >
           <h2 className="text-center">Register</h2>
           <form onSubmit={onSubmit}>
-            <div className="form-group">
+            <div className="form-group  my-2">
               <label>Username</label>
               <input
                 type="text"
@@ -68,7 +91,7 @@ const RegisterPage = () => {
                 value={username}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group my-2">
               <label>Email</label>
               <input
                 type="email"
@@ -78,7 +101,7 @@ const RegisterPage = () => {
                 value={email}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group my-2">
               <label>Password</label>
               <input
                 type="password"
@@ -88,7 +111,7 @@ const RegisterPage = () => {
                 value={password}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group my-2">
               <label>Confirm Password</label>
               <input
                 type="password"
@@ -98,8 +121,8 @@ const RegisterPage = () => {
                 value={password2}
               />
             </div>
-            <div className="form-group">
-              {loading ? (
+            <div className="form-group my-2">
+              {isLoading ? (
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
@@ -114,6 +137,8 @@ const RegisterPage = () => {
             </p>
           </form>
         </div>
+        
+      
       </div>
     </Layout>
   );

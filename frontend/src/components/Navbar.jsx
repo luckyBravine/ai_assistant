@@ -1,11 +1,23 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+// import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/user";
+import { useLogoutMutation } from "../features/userAPI";
+import { clearUser } from "../features/user";
+// import { BiTime } from "react-icons/bi";
+// import { CgMenuLeftAlt } from "react-icons/cg";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const [logout, { isLoading }] = useLogoutMutation();
+  const { isAuthenticated } = useSelector((state) => state.user);
+  // const [click, setClick] = useState(false);
 
-  const { isAuthenticated, loading } = useSelector((state) => state.user);
+  // const handleClick = () => setClick(!click);
+
+  const handleLogout = async () => {
+    await logout().unwrap();
+    dispatch(clearUser());
+  };
 
   const authLinks = (
     <>
@@ -15,21 +27,19 @@ const Navbar = () => {
         </NavLink>
       </li>
       <li className="nav-item">
-        {loading ? (
+        {isLoading ? (
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         ) : (
-          <button
-            className=" btn-warning btn text-light"
-            onClick={() => dispatch(logout())}
-          >
+          <button className="btn-warning btn text-light" onClick={handleLogout}>
             Logout
           </button>
         )}
       </li>
     </>
   );
+
   const guestLinks = (
     <>
       <li className="nav-item">
@@ -49,8 +59,19 @@ const Navbar = () => {
       </li>
     </>
   );
+
+  // const content = (
+  //   <>
+  //     <div className="lg:hidden block absolute top-10 w-full left-0 right-0 bg-slate-900 transition">
+  //       <ul className="text-center text-xl p-20">
+  //         {isAuthenticated ? authLinks : guestLinks}
+  //       </ul>
+  //     </div>
+  //   </>
+  // );
+
   return (
-    <nav className="navbar navbar-expand-sm bg-body-tertiary fixed-top text-center">
+    <nav className="navbar navbar-expand-md bg-body-tertiary fixed-top text-center container-fluid">
       <div className="container">
         <button
           className="navbar-toggler"
@@ -66,13 +87,37 @@ const Navbar = () => {
         <Link className="navbar-brand" to="#">
           AI Assistant
         </Link>
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
+        <div className="collapse-sm navbar-collapse" id="navbarTogglerDemo03">
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             {isAuthenticated ? authLinks : guestLinks}
           </ul>
         </div>
       </div>
     </nav>
+    // <nav className="w-full flex mx-auto justify-between items-center">
+    //   <div className="h-10vh flex justify-between top-0 bg-slate-800 z-50 lg:py-5 px-20 py-4">
+    //     <div className="flex items-center flex-1">
+    //       <span className="text-3xl font-bold">Logo</span>
+    //     </div>
+    //     <div className="hidden lg:flex lg:flex-1 items-center justify-end font-normal">
+    //       <div className="flex-10">
+    //         <ul className="flex gap-8 mr-16 text-[16px]">
+    //           {isAuthenticated ? authLinks : guestLinks}
+    //         </ul>
+    //       </div>
+    //     </div>
+    //     <div className="block lg:hidden">
+    //       <button className="transition" onClick={handleClick}>
+    //         {click ? <BiTime /> : <CgMenuLeftAlt />}
+    //       </button>
+    //     </div>
+    //   </div>
+    //   {click && (
+    //     <div className="lg:hidden bg-slate-800 w-full px-20 py-4">
+    //       {content}
+    //     </div>
+    //   )}
+    // </nav>
   );
 };
 
