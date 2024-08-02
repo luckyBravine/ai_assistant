@@ -9,6 +9,7 @@ import { toast } from "sonner";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const [login, { isLoading, isAuthenticated, registered }] = useLoginMutation();
+  // const navigate = useNavigate();
 
   //get the userAPI content so as to get the details within
   const apiState = useSelector((state) => state.userApi);
@@ -60,6 +61,7 @@ const LoginPage = () => {
     try {
       const user = await login({ username, password }).unwrap();
       dispatch(setUser(user));
+      // navigate("/DashboardPage");
     } catch (error) {
       dispatch(setError(error.data.errorMessage));
     }
@@ -73,47 +75,6 @@ const LoginPage = () => {
 
   return (
     <Layout title="AI Assistant | Login" content="Login">
-      {/* <div className="m-auto d-flex justify-content-center align-items-center">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Login</h2>
-          <form onSubmit={onSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={onChange}
-                value={username}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={onChange}
-                value={password}
-              />
-            </div>
-            <div className="form-group">
-              {isLoading ? (
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              ) : (
-                <button type="submit" className="btn btn-primary">
-                  Login
-                </button>
-              )}
-            </div>
-            <p>
-              Already have an account? <Link to="/registerPage">Login</Link>
-            </p>
-          </form>
-        </div>
-      </div> */}
       <div className="d-flex justify-content-center align-items-center vh-100 w-100 container">
         <div
           className="card card-body mt-5"
@@ -154,7 +115,7 @@ const LoginPage = () => {
             </div>
             <p>
               Don&apos;t have an account?{" "}
-              <Link to="/registerPage">Register</Link>
+              <Link to="/RegisterPage">Register</Link>
             </p>
           </form>
         </div>

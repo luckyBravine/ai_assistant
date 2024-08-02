@@ -1,9 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit'
 import userReducer from './features/user'
+import documentReducer from './features/document'
 import { userApi } from './features/userAPI'
+
 
 export const store = configureStore({
     reducer: {
+        document: documentReducer,
         user: userReducer,
         [userApi.reducerPath]: userApi.reducer,
     },
