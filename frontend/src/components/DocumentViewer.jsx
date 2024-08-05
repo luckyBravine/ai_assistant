@@ -1,14 +1,4 @@
-// import { useDispatch,useSelector } from "react-redux";
-// import { fetchLatestFile } from "features/document";
-// const DocumentViewer = () => {
-//   return (
-//     <div>DocumentViewer</div>
-//   )
-// }
 
-// export default DocumentViewer
-
-// import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLatestFile } from "../features/document";
 import { toast } from "sonner";

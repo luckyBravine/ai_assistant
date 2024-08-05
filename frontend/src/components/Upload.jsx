@@ -21,32 +21,6 @@ const Upload = () => {
     
   };
 
- 
-//   useEffect(() => {
-//     dispatch(fetchFiles());
-//   }, [dispatch]);
-
-  //   const forceDownload = (response, title) => {
-  //     const url = window.URL.createObjectURL(new Blob([response.data]));
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.setAttribute('download', `${title}.pdf`);
-  //     document.body.appendChild(link);
-  //     link.click();
-  //   };
-
-  //   const downloadWithAxios = (url, title) => {
-  //     axios({
-  //       method: 'get',
-  //       url,
-  //       responseType: 'arraybuffer',
-  //     })
-  //       .then((response) => {
-  //         forceDownload(response, title);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   };
-
   return (
     <div className="container">
       <div className="form-group">
