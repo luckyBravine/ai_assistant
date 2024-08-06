@@ -1,7 +1,7 @@
 
 function SuggestionInterface() {
   return (
-    <div>SuggestionInterface</div>
+    <div></div>
   )
 }
 
