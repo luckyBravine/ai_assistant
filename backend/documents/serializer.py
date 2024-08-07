@@ -6,7 +6,7 @@ from .models import DocumentImproved, DocumentCombined, DocumentOriginal
 class DocumentOriginalSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentOriginal
-        fields = ['id', 'document', 'upload_date', 'status']
+        fields = ['id', 'document', 'upload_date', 'status', 'user_id']
 
 
 #improved document serializer

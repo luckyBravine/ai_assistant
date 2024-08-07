@@ -4,6 +4,24 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import DocumentOriginal, DocumentImproved, DocumentCombined
 from .serializer import DocumentOriginalSerializer, DocumentImprovedSerializer, DocumentCombinedSerializer
+from .nltk_analysis import GrammarSuggestions, StyleSuggestions, ClaritySuggestions
+
+
+# def get_document(request, document_id, suggestion_type):
+#     document = get_object_or_404(Document, pk=document_id)
+#     text = document.file.read().decode('utf-8')
+
+#     if suggestion_type == 'grammar':
+#         analyzer = GrammarSuggestions()
+#     elif suggestion_type == 'style':
+#         analyzer = StyleSuggestions()
+#     elif suggestion_type == 'clarity':
+#         analyzer = ClaritySuggestions()
+#     else:
+#         return JsonResponse({'error': 'Invalid suggestion type'}, status=400)
+
+#     suggestions = analyzer.analyze(text)
+#     return JsonResponse({'suggestions': suggestions})
 
 #endpoints creations
 class DocumentOriginalView(APIView):
@@ -19,7 +37,22 @@ class DocumentOriginalView(APIView):
         document = get_object_or_404(DocumentOriginal, id=doc_id)
         serializer = DocumentOriginalSerializer(document)
         return Response(serializer.data)
-
+    
+    def analyze_document(self, request, doc_id, suggestion_type):
+        document = get_object_or_404(DocumentOriginal, id=doc_id)
+        text = document.file.read().decode('utf-8')
+        
+        if suggestion_type == 'grammar':
+            analyzer = GrammarSuggestions()
+        elif suggestion_type == 'style':
+            analyzer = StyleSuggestions()
+        elif suggestion_type == 'clarity':
+            analyzer = ClaritySuggestions()
+        else:
+            return Response({'error': 'Invalid suggestion type'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        suggestions = analyzer.analyze(text)
+        return Response({'suggestions': suggestions})
 class DocumentImprovedView(APIView):
     def post(self, request):
         serializer = DocumentImprovedSerializer(data=request.data)
