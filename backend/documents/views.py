@@ -38,10 +38,26 @@ class DocumentOriginalView(APIView):
         serializer = DocumentOriginalSerializer(document)
         return Response(serializer.data)
     
-    def analyze_document(self, request, doc_id, suggestion_type):
+    # def analyze_document(self, request, doc_id, suggestion_type):
+    #     document = get_object_or_404(DocumentOriginal, id=doc_id)
+    #     text = document.file.read().decode('utf-8')
+        
+    #     if suggestion_type == 'grammar':
+    #         analyzer = GrammarSuggestions()
+    #     elif suggestion_type == 'style':
+    #         analyzer = StyleSuggestions()
+    #     elif suggestion_type == 'clarity':
+    #         analyzer = ClaritySuggestions()
+    #     else:
+    #         return Response({'error': 'Invalid suggestion type'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    #     suggestions = analyzer.analyze(text)
+    #     return Response({'suggestions': suggestions})
+    
+    # def analyze_document(self, request, doc_id, suggestion_type):
         document = get_object_or_404(DocumentOriginal, id=doc_id)
         text = document.file.read().decode('utf-8')
-        
+
         if suggestion_type == 'grammar':
             analyzer = GrammarSuggestions()
         elif suggestion_type == 'style':
@@ -52,7 +68,42 @@ class DocumentOriginalView(APIView):
             return Response({'error': 'Invalid suggestion type'}, status=status.HTTP_400_BAD_REQUEST)
         
         suggestions = analyzer.analyze(text)
-        return Response({'suggestions': suggestions})
+
+        # Create or update DocumentImproved instance
+        improved_document = DocumentImproved.objects.create(
+            original_document=document,
+            suggestions=suggestions  # Assuming you have a field to store suggestions
+        )
+        improved_document.save()
+
+        serializer = DocumentImprovedSerializer(improved_document)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def analyze_document(self, request, doc_id, suggestion_type):
+        document = get_object_or_404(DocumentOriginal, id=doc_id)
+        text = document.file.read().decode('utf-8')
+
+        if suggestion_type == 'grammar':
+            analyzer = GrammarSuggestions()
+        elif suggestion_type == 'style':
+            analyzer = StyleSuggestions()
+        elif suggestion_type == 'clarity':
+            analyzer = ClaritySuggestions()
+        else:
+            return Response({'error': 'Invalid suggestion type'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        suggestions = analyzer.analyze(text)
+
+    # Create DocumentImproved instance
+        improved_document = DocumentImproved.objects.create(
+            document= document.file,  # Assuming you want to copy or move the original file
+            status='improved',  # Default status or can be set dynamically
+            user=request.user,  # Assuming the request has a user attached
+        )
+
+        serializer = DocumentImprovedSerializer(improved_document)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 class DocumentImprovedView(APIView):
     def post(self, request):
         serializer = DocumentImprovedSerializer(data=request.data)

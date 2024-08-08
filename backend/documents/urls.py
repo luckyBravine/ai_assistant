@@ -10,7 +10,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/upload/original/', DocumentOriginalView.as_view(), name='upload_original_document'),
     path('api/document/original/<int:doc_id>/', DocumentOriginalView.as_view(), name='get_original_document'),
-    path('document-original/<int:doc_id>/analyze/<str:suggestion_type>/', DocumentOriginalView.as_view(), name='document_analysis'),
+    path('api/document/original/<int:doc_id>/analyze/<str:suggestion_type>/', DocumentOriginalView.as_view(), name='document_analysis'),
     path('api/upload/improved/', DocumentImprovedView.as_view(), name='upload_improved_document'),
     path('api/document/improved/<int:doc_id>/', DocumentImprovedView.as_view(), name='get_improved_document'),
     path('api/document/combined/create/<int:original_id>/<int:improved_id>/', DocumentCombinedView.as_view(), name='create_combined_document'),

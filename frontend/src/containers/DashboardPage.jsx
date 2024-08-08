@@ -13,7 +13,7 @@ const DashboardPage = () => {
   
   return (
     <Layout title="AI Assistant | Dashboard" content="Dashboard">
-      <div className="d-flex justify-content-center align-items-center vh-100 w-100 container">
+      <div className="d-flex justify-content-center align-items-center mt-5 min-vh-100 w-100 container">
         <div className="row">
           <div className="col-4">
             <SuggestionInterface />

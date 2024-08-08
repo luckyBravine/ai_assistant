@@ -116,24 +116,43 @@ export const uploadFile = createAsyncThunk(
 );
 
 // Async thunk to fetch the latest file
+// export const fetchLatestFile = createAsyncThunk(
+//   "file/fetchLatestFile",
+//   async (_, { rejectWithValue, getState }) => {
+//     try {
+//       const state = getState();
+//       const latestFileId = state.document.files[state.file.files.length - 1]?.id;
+//       if (!latestFileId) {
+//         throw new Error("No files found");
+//       }
+//       const response = await axios.get(`${API_URL}/api/document/original/${latestFileId}/`);
+//       return response.data.document; // Ensure this is a URL string or file path
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response ? error.response.data : error.message
+//       );
+//     }
+//   }
+// );
+
 export const fetchLatestFile = createAsyncThunk(
-  "file/fetchLatestFile",
-  async (_, { rejectWithValue, getState }) => {
-    try {
-      const state = getState();
-      const latestFileId = state.file.files[state.file.files.length - 1]?.id;
-      if (!latestFileId) {
-        throw new Error("No files found");
+    "file/fetchLatestFile",
+    async (_, { rejectWithValue, getState }) => {
+      try {
+        const state = getState();
+        const latestFileId = state.document.files[state.document.files.length - 1]?.id;
+        if (!latestFileId) {
+          throw new Error("No files found");
+        }
+        const response = await axios.get(`${API_URL}/api/document/original/${latestFileId}/`);
+        return response.data.document; // Ensure this is a URL string or file path
+      } catch (error) {
+        return rejectWithValue(
+          error.response ? error.response.data : error.message
+        );
       }
-      const response = await axios.get(`${API_URL}/api/document/original/${latestFileId}/`);
-      return response.data.document; // Ensure this is a URL string or file path
-    } catch (error) {
-      return rejectWithValue(
-        error.response ? error.response.data : error.message
-      );
     }
-  }
-);
+  );
 
 // Async thunk to fetch suggestions
 export const fetchSuggestions = createAsyncThunk(
@@ -141,7 +160,9 @@ export const fetchSuggestions = createAsyncThunk(
   async ({ docId, suggestionType }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/api/document/original/${docId}/analyze/${suggestionType}/`);
+      console.log('fetchSuggestions', response)
       return response.data.suggestions;
+      
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : error.message
@@ -153,9 +174,11 @@ export const fetchSuggestions = createAsyncThunk(
 // Async thunk to post suggestions
 export const postSuggestions = createAsyncThunk(
   "file/postSuggestions",
-  async ({ docId, suggestions }, { rejectWithValue }) => {
+  async ({  suggestions }, { rejectWithValue }) => {
+    // ${docId}/suggestions/ docId,
     try {
-      const response = await axios.post(`${API_URL}api/upload/improved/${docId}/suggestions/`, suggestions);
+      const response = await axios.post(`${API_URL}/api/upload/improved/`, suggestions);
+      console.log('postSuggestion', response)
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -164,6 +187,30 @@ export const postSuggestions = createAsyncThunk(
     }
   }
 );
+
+// Async thunk to upload the updated document
+export const uploadUpdatedDocument = createAsyncThunk(
+  "file/uploadUpdatedDocument",
+  async ({ updatedDocument }, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append("document", updatedDocument);
+
+      const response = await axios.post(`${API_URL}/api/upload/improved/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log('uploadUpdatedDocument', response)
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
 
 const initialState = {
   files: [],
