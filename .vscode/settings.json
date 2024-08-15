@@ -4,7 +4,10 @@
         "Botify",
         "Cimenu",
         "corsheaders",
+        "fdist",
+        "punkt",
         "reduxjs",
+        "stopwords",
         "tailwindcss",
         "ulqzt"
     ]

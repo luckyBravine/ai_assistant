@@ -157,9 +157,11 @@ export const fetchLatestFile = createAsyncThunk(
 // Async thunk to fetch suggestions
 export const fetchSuggestions = createAsyncThunk(
   "file/fetchSuggestions",
-  async ({ docId, suggestionType }, { rejectWithValue }) => {
+  async ({ doc, suggestionType }, { rejectWithValue }) => {
+    console.log('fetchSuggestions', doc, suggestionType )
+    // /api/document/analyze/${suggestionType}/
     try {
-      const response = await axios.get(`${API_URL}/api/document/original/${docId}/analyze/${suggestionType}/`);
+      const response = await axios.get(`${API_URL}/api/document/original/${doc}/analyze/${suggestionType}/`);
       console.log('fetchSuggestions', response)
       return response.data.suggestions;
       
@@ -176,6 +178,7 @@ export const postSuggestions = createAsyncThunk(
   "file/postSuggestions",
   async ({  suggestions }, { rejectWithValue }) => {
     // ${docId}/suggestions/ docId,
+    console.log('uploadUpdatedDocument', suggestions)
     try {
       const response = await axios.post(`${API_URL}/api/upload/improved/`, suggestions);
       console.log('postSuggestion', response)
@@ -192,6 +195,7 @@ export const postSuggestions = createAsyncThunk(
 export const uploadUpdatedDocument = createAsyncThunk(
   "file/uploadUpdatedDocument",
   async ({ updatedDocument }, { rejectWithValue }) => {
+    console.log('uploadUpdatedDocument', updatedDocument)
     try {
       const formData = new FormData();
       formData.append("document", updatedDocument);
