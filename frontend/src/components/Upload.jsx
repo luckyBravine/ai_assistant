@@ -1,24 +1,25 @@
-import { useState  } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 //bring in redux
-import { useDispatch,useSelector } from "react-redux";
-import { uploadFile, } from "../features/document";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadFile } from "../features/document";
 
 const Upload = () => {
   const [filename, setFilename] = useState("");
   const dispatch = useDispatch();
-    const {errorMessage, status } = useSelector((state) => state.document)
+  const { errorMessage, status, loading } = useSelector(
+    (state) => state.document
+  );
 
   const saveFile = () => {
     try {
-      console.log(filename)
+      console.log(filename);
       dispatch(uploadFile(filename));
-    toast.success(status)
+      toast.success(status);
     } catch (error) {
-      toast.error(errorMessage.document)
+      toast.error(errorMessage.document);
     }
-    
   };
 
   return (
@@ -33,13 +34,22 @@ const Upload = () => {
           className="form-control"
         />
       </div>
-      <button
-        className="btn btn-primary float-left mt-2"
-        type="button"
-        onClick={saveFile}
-      >
-        Upload
-      </button>
+
+      <div className="form-group my-2">
+        {loading ? (
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          <button
+            className="btn btn-primary float-left mt-2"
+            type="button"
+            onClick={saveFile}
+          >
+            Upload
+          </button>
+        )}
+      </div>
     </div>
   );
 };

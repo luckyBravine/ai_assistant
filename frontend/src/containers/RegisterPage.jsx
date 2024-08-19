@@ -25,16 +25,19 @@ const RegisterPage = () => {
   const { username, email, password, password2 } = formData;
 
   useEffect(() => {
+    //this is checks whether the mutations has any messages, then it loops over the mutations to check the messages available
     const mutationKeys = Object.keys(apiState.mutations);
     mutationKeys.forEach((key) => {
       const mutation = apiState.mutations[key];
-      if (mutation.status === "rejected" && mutation.error) {
-        const errorMessages = mutation.error.data.non_field_errors || [
-          "An error occurred",
-        ];
-        errorMessages.forEach((msg) => toast.error(msg));
-      } else if (mutation.status === "fulfilled" && mutation.data) {
-        toast.success("User registered successful!");
+      if (key === "register") {
+        if (mutation.status === "rejected" && mutation.error) {
+          const errorMessages = mutation.error.data.non_field_errors || [
+            "An error occurred",
+          ];
+          errorMessages.forEach((msg) => toast.error(msg));
+        } else if (mutation.status === "fulfilled" && mutation.data) {
+          toast.success("User registered successfully!");
+        }
       }
     });
 
@@ -53,7 +56,8 @@ const RegisterPage = () => {
   }, [apiState.mutations, apiState.queries]);
 
   const onSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault();  //prevents the submission of empty field
+    //
     if (password !== password2) {
       toast.error("Passwords do not match");
     } else {
@@ -73,7 +77,7 @@ const RegisterPage = () => {
 
   return (
     <Layout title="AI Assistant | Register" content="Register">
-      <div className="d-flex justify-content-center align-items-center vh-100 w-100 container">
+      <div className="d-flex justify-content-center align-items-center w-100 container">
         
         <div
           className="card card-body mt-5"

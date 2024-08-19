@@ -8,20 +8,21 @@ import { API_URL } from "../config/index";
 
 const getFileType = (fileName) => {
   const extension = fileName.split(".").pop()?.toLowerCase();
+  //declare the supported File types
   const supportedFileTypes = ["pdf", "txt", "docx", "doc"];
   return supportedFileTypes.includes(extension) ? extension : "default";
 };
 
 const DocumentViewer = () => {
   const dispatch = useDispatch();
-  const { currentFile, status, loading, errorMessage, } = useSelector(
+  const { status, loading, errorMessage } = useSelector(
     (state) => state.document
   );
   const [documentUrl, setDocumentUrl] = useState(null);
   const [documentType, setDocumentType] = useState("default");
-  // {updatedDoc} suggestions
 
   const handleFetchLatestFile = () => {
+    //Fetch the latest File
     dispatch(fetchLatestFile())
       .unwrap()
       .then((filePath) => {
@@ -46,7 +47,7 @@ const DocumentViewer = () => {
           })
           .catch((error) => {
             console.error("Error fetching document:", error);
-            toast.error(`Error fetching latest file: ${error.message}`);
+            toast.error(`Error fetching latest file: ${errorMessage}`);
           });
       })
       .catch((error) => {
@@ -58,34 +59,28 @@ const DocumentViewer = () => {
   return (
     <div>
       <div>
-        <button onClick={handleFetchLatestFile} disabled={loading}>
-          {loading ? "Loading..." : "Fetch Latest File"}
-        </button>
+        {loading ? (
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        ) : (
+          <button
+            onClick={handleFetchLatestFile}
+            disabled={loading}
+            className="btn btn-info float-left mt-2"
+          >
+            View Latest File
+          </button>
+        )}
+
         {status === "succeeded" && documentUrl && (
           <div>
-            <h2>Latest Uploaded File</h2>
-            <p>ID: {currentFile?.id}</p>
             <DocViewer
               documents={[{ uri: documentUrl, fileType: documentType }]}
               pluginRenderers={DocViewerRenderers}
             />
-            
-            {/* <iframe
-              className="file-viewer"
-              width="100%"
-              height="600"
-              frameBorder="0"
-              src={`https://docs.google.com/gview?url=${documentUrl}&embedded=true`}
-            ></iframe> */}
           </div>
         )}
-        {/* {status === "succeeded" && suggestions && (
-          <DocViewer
-          documents={[{ uri: updatedDoc, fileType: documentType }]}
-          pluginRenderers={DocViewerRenderers}
-        />
-        )} */}
-        {status === "failed" && <p>Error: {errorMessage}</p>}
       </div>
     </div>
   );

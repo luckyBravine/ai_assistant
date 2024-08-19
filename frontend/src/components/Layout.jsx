@@ -11,7 +11,7 @@ const Layout = ({ title, content, children }) => {
         <meta name="description" content={content} />
       </Helmet>
       <Navbar />
-      <div className="container-fluid m-auto">
+      <div className="container-fluid" style={{ paddingTop: "60px" }}>
         <Toaster position="top-center" />
         {children}
       </div>

@@ -4,11 +4,18 @@
         "Botify",
         "Cimenu",
         "corsheaders",
+        "cyntler",
         "fdist",
+        "msword",
+        "officedocument",
+        "openxmlformats",
         "punkt",
+        "pythoncom",
+        "pywin",
         "reduxjs",
         "stopwords",
         "tailwindcss",
-        "ulqzt"
+        "ulqzt",
+        "wordprocessingml"
     ]
 }

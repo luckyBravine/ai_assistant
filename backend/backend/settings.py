@@ -54,13 +54,17 @@ REST_FRAMEWORK ={
 #the port for the frontend i.e react.js
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']  
 
-#Allow cors to share resouces
+#Allow cors to share resources
 CORS_ORIGIN_ALLOW_ALL = True
 
+# Optionally for development
+CORS_ALLOW_CREDENTIALS = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

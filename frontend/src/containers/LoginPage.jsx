@@ -9,9 +9,8 @@ import { toast } from "sonner";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const [login, { isLoading, isAuthenticated, registered }] = useLoginMutation();
-  // const navigate = useNavigate();
+  const [redirect, setRedirect] = useState(false);
 
-  //get the userAPI content so as to get the details within
   const apiState = useSelector((state) => state.userApi);
 
   const [formData, setFormData] = useState({
@@ -22,11 +21,10 @@ const LoginPage = () => {
   const { username, password } = formData;
 
   useEffect(() => {
-    if(registered){
+    if (registered) {
       dispatch(resetRegistered());
     }
-    
-  }, [registered, dispatch ]);
+  }, [registered, dispatch]);
 
   useEffect(() => {
     const mutationKeys = Object.keys(apiState.mutations);
@@ -39,6 +37,8 @@ const LoginPage = () => {
         errorMessages.forEach((msg) => toast.error(msg));
       } else if (mutation.status === "fulfilled" && mutation.data) {
         toast.success("Login successful!");
+        // Delay redirect to ensure toast is shown
+        setTimeout(() => setRedirect(true), 1000);
       }
     });
 
@@ -61,7 +61,6 @@ const LoginPage = () => {
     try {
       const user = await login({ username, password }).unwrap();
       dispatch(setUser(user));
-      // navigate("/DashboardPage");
     } catch (error) {
       dispatch(setError(error.data.errorMessage));
     }
@@ -71,11 +70,11 @@ const LoginPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  if (isAuthenticated) return <Navigate to="/DashboardPage" />;
+  if (redirect || isAuthenticated) return <Navigate to="/DashboardPage" />;
 
   return (
     <Layout title="AI Assistant | Login" content="Login">
-      <div className="d-flex justify-content-center align-items-center vh-100 w-100 container">
+      <div className="d-flex justify-content-center align-items-center w-100 container">
         <div
           className="card card-body mt-5"
           style={{ maxWidth: "500px", width: "100%" }}
@@ -125,3 +124,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
