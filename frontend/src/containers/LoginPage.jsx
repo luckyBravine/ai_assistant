@@ -25,7 +25,7 @@ const LoginPage = () => {
       dispatch(resetRegistered());
     }
   }, [registered, dispatch]);
-
+  
   useEffect(() => {
     const mutationKeys = Object.keys(apiState.mutations);
     mutationKeys.forEach((key) => {

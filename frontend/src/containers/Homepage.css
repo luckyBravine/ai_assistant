@@ -1,26 +1,25 @@
-.HomePage {
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  header {
-    background: url('https://source.unsplash.com/random/1600x900?technology') no-repeat center center;
-    background-size: cover;
-  }
-  
-  h1 {
-    font-weight: 700;
-    font-size: 3rem;
-  }
-  
-  #features .card {
-    margin-top: 1rem;
-  }
-  
-  #call-to-action {
-    background-color: #f8f9fa;
-  }
-  
-  footer {
-    background-color: #343a40;
-  }
-  
+
+
+header {
+  background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 0, 0.795)),
+    url(../../public/ai_assistant.jpg) no-repeat center center;
+  background-size: cover;
+  border-radius: 6px;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 3rem;
+}
+
+#features .card {
+  margin-top: 1rem;
+}
+
+#call-to-action {
+  background-color: #f8f9fa;
+}
+
+footer {
+  background-color: #343a40;
+}
