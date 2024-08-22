@@ -9,7 +9,7 @@ import { API_URL } from "../config/index";
 // Helper function to determine file type
 const getFileType = (fileName) => {
   const extension = fileName.split(".").pop()?.toLowerCase();
-  const supportedFileTypes = ["pdf", "txt", "docx", "doc", "xlsx", "png", "jpg"];
+  const supportedFileTypes = ["pdf", "txt", "docx", "doc", "xlsx",];
   return supportedFileTypes.includes(extension) ? extension : null;
 };
 
