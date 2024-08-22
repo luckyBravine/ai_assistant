@@ -10,18 +10,22 @@ export const uploadFile = createAsyncThunk(
       const formData = new FormData();
       formData.append("document", file);
 
-      // Get the user token from the state (assuming your token is stored in `user.token`)
+      // Get the user token from the state
       const token = getState().user.token;
 
       // Send the file along with the authentication token
       const response = await axios.post(`${API_URL}/api/upload/original/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Token ${token}`,  // Ensure the token is included in the headers
+          "Authorization": `Token ${token}`,  // Ensure token is included in the headers
         },
       });
 
       const documentId = response.data.id;
+
+      if (!documentId) {
+        return rejectWithValue('Document ID not found in the response.');
+      }
 
       // Fetch the document content based on the uploaded file ID
       const documentResponse = await axios.get(`${API_URL}/api/document/original/${documentId}/`, {
@@ -30,10 +34,11 @@ export const uploadFile = createAsyncThunk(
         },
       });
 
-      const documentContent = documentResponse.data.content; // Ensure this is returned as part of the response
+      const documentContent = documentResponse.data.content; // Ensures content is returned as part of the response
 
       return { document: response.data, content: documentContent };
     } catch (error) {
+      console.error('Error uploading file:', error.response);
       return rejectWithValue(error.response.data.document);
     }
   }
@@ -41,23 +46,40 @@ export const uploadFile = createAsyncThunk(
 
 
 export const fetchLatestFile = createAsyncThunk(
-    "file/fetchLatestFile",
-    async (_, { rejectWithValue, getState }) => {
-      try {
-        const state = getState();
-        const latestFileId = state.document.files[state.document.files.length - 1]?.id;
-        if (!latestFileId) {
-          throw new Error("No files found");
-        }
-        const response = await axios.get(`${API_URL}/api/document/original/${latestFileId}/`);
-        return response.data.document; // Ensure this is a URL string or file path
-      } catch (error) {
-        return rejectWithValue(
-          error.response ? error.response.data : error.message
-        );
+  "file/fetchLatestFile",
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      // Get's the state
+      const state = getState();
+      // Get the user token from the state
+      const token = getState().user.token;
+
+      if (!token) {
+        return rejectWithValue('Authentication token is missing.');
       }
+      const latestFileId = state.document.files[state.document.files.length - 1]?.id;
+      if (!latestFileId) {
+        throw new Error("No files found");
+      }
+      const response = await axios.get(`${API_URL}/api/document/original/${latestFileId}/`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Token ${token}`,  // Pass the token here
+        },
+      });
+      if (!response.data?.document) {
+        throw new Error("Invalid document data received");
+      }
+      return response.data.document; // This returns the file path or URL
+    } catch (error) {
+      console.error('Error fetching the latest file:', error.response);
+      return rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
-  );
+  }
+);
+
 
 
 
@@ -68,6 +90,9 @@ export const postSuggestions = createAsyncThunk(
       // Get the token from the state
       const token = getState().user.token;
 
+      if (!token) {
+        return rejectWithValue('Authentication token is missing.');
+      }
       const formData = new FormData();
       formData.append('content', content);  // Attach content
       formData.append('suggestionType', suggestionType);  // Attach suggestion type
@@ -82,8 +107,10 @@ export const postSuggestions = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      console.error('Error uploading file:', error.response);
       return rejectWithValue(
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
+        error.response?.data?.document || error.message
       );
     }
   }
@@ -93,7 +120,12 @@ export const postContents = createAsyncThunk(
   "file/postContents",
   async ({ improvedContent, content }, { rejectWithValue, getState }) => {
     try {
+      // Get the token from the state
       const token = getState().user.token;
+      
+      if (!token) {
+        return rejectWithValue('Authentication token is missing.');
+      }
 
       // URL without parameters
       const url = `${API_URL}/api/document/combined/create/`;
@@ -111,8 +143,9 @@ export const postContents = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      console.error('Error uploading file:', error.response);
       return rejectWithValue(
-        error.response ? error.response.data : error.message
+        error.response?.data?.document || error.message
       );
     }
   }
@@ -136,8 +169,9 @@ export const uploadUpdatedDocument = createAsyncThunk(
       console.log('uploadUpdatedDocument', response)
       return response.data;
     } catch (error) {
+      console.error('Error uploading file:', error.response);
       return rejectWithValue(
-        error.response ? error.response.data : error.message
+        error.response?.data?.document || error.message
       );
     }
   }
@@ -153,6 +187,7 @@ const initialState = {
   suggestions: null,
   improvedDocument: [],
   combinedDocument: null,
+  content: null,
 };
 
 const documentSlice = createSlice({

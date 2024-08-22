@@ -1,6 +1,7 @@
 
 
 header {
+  /* sets the background image and background color */
   background: linear-gradient(rgba(0, 0, 0, 0.767), rgba(0, 0, 0, 0.795)),
     url(../../public/ai_assistant.jpg) no-repeat center center;
   background-size: cover;

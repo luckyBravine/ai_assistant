@@ -127,6 +127,7 @@ const RegisterPage = () => {
             </div>
             <div className="form-group my-2">
               {isLoading ? (
+                // displays a spinner
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
@@ -137,7 +138,7 @@ const RegisterPage = () => {
               )}
             </div>
             <p>
-              Already have an account? <Link to="/login">Login</Link>
+              Already have an account? <Link to="/LoginPage">Login</Link>
             </p>
           </form>
         </div>

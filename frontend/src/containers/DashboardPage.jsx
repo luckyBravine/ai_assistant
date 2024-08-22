@@ -9,6 +9,7 @@ const DashboardPage = () => {
     (state) => state.user
   );
 
+  // redirect unauthorized users to the login page
   if (!isAuthenticated && isLoading && user === null) return <Navigate to="/LoginPage" />;
   
   return (

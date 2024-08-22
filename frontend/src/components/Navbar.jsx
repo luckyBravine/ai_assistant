@@ -14,7 +14,7 @@ const Navbar = () => {
     dispatch(clearUser());
   };
 
-
+  // authenticated links
   const authLinks = (
     <>
       <li className="nav-item">
@@ -40,6 +40,7 @@ const Navbar = () => {
     </>
   );
 
+  // guest links
   const guestLinks = (
     <>
       <li className="nav-item">
@@ -75,7 +76,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <Link className="navbar-brand" to="#">
-          AI Assistant
+          AI Document Assistant
         </Link>
         <div className="collapse-sm navbar-collapse" id="navbarTogglerDemo03">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

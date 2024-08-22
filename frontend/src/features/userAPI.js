@@ -35,7 +35,7 @@ export const userApi = createApi({
     logout: builder.mutation({
       query: () => ({
         url: '/api/auth/logout',
-        method: 'POST', // Ensure method is POST if that's what your backend expects
+        method: 'POST', 
       }),
     }),
   }),
