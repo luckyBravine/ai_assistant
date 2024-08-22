@@ -62,10 +62,10 @@ function SuggestionInterface() {
             <p className="card-text">Ensure your document is grammatically correct</p>
             <div className="flex justify-between ms-auto">
               <button onClick={() => handlePostSuggestions("grammar")} className="btn btn-primary">
-                Apply
+                Accept
               </button>
               <button onClick={handleRemoveGrammarCard} className="btn btn-danger mr-2">
-                Close
+                Reject
               </button>
             </div>
           </div>
@@ -83,10 +83,10 @@ function SuggestionInterface() {
             <p className="card-text">Document Styling is key for good presentation</p>
             <div className="flex justify-between ms-auto">
               <button onClick={() => handlePostSuggestions("style")} className="btn btn-primary">
-                Apply
+                Accept
               </button>
               <button onClick={handleRemoveStyleCard} className="btn btn-danger mr-2">
-                Close
+                Reject
               </button>
             </div>
           </div>
@@ -104,10 +104,10 @@ function SuggestionInterface() {
             <p className="card-text">Clear documents show eloquence.</p>
             <div className="flex justify-between ms-auto">
               <button onClick={() => handlePostSuggestions("clarity")} className="btn btn-primary">
-                Apply
+                Accept
               </button>
               <button onClick={handleRemoveClarityCard} className="btn btn-danger mr-2">
-                Close
+                Reject
               </button>
             </div>
           </div>
